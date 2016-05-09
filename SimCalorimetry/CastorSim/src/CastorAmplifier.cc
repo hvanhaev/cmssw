@@ -35,14 +35,15 @@ void CastorAmplifier::amplify(CaloSamples & frame, CLHEP::HepRandomEngine* engin
   double gauss [32]; //big enough
   double noise [32]; //big enough
   double fCperPE = parameters.photoelectronsToAnalog(frame.id());
+  double nominalfCperPE = parameters.getNominalfCperPE();
 
   for (int i = 0; i < frame.size(); i++) gauss[i] = CLHEP::RandGaussQ::shoot(engine, 0., 1.);
   pwidths->makeNoise (frame.size(), gauss, noise);
   for(int tbin = 0; tbin < frame.size(); ++tbin) {
     int capId = (theStartingCapId + tbin)%4;
-    double pedestal = peds->getValue (capId);
+    double pedestal = peds->getValue(capId);
     if(addNoise_) {
-      pedestal += noise [tbin];
+      pedestal += noise[tbin]*(fCperPE/nominalfCperPE);
     }
     frame[tbin] *= fCperPE;
     frame[tbin] += pedestal;
