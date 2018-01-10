@@ -11,7 +11,8 @@
 CastorSimParameters::CastorSimParameters(double simHitToPhotoelectrons, double photoelectronsToAnalog,double samplingFactor, double timePhase, bool syncPhase)
 : CaloSimParameters(simHitToPhotoelectrons, photoelectronsToAnalog, samplingFactor, timePhase, 6, 4, false, syncPhase),
   theDbService(0),
-  theSamplingFactor( samplingFactor )
+  theSamplingFactor( samplingFactor ),
+  nominalfCperPE( 1)
 {
 }
 
@@ -19,24 +20,19 @@ CastorSimParameters::CastorSimParameters(double simHitToPhotoelectrons, double p
 CastorSimParameters::CastorSimParameters(const edm::ParameterSet & p)
 :  CaloSimParameters(p),
    theDbService(0),
-   theSamplingFactor( p.getParameter<double>("samplingFactor") )
+   theSamplingFactor( p.getParameter<double>("samplingFactor") ),
+   nominalfCperPE( p.getParameter<double>("photoelectronsToAnalog") )
 {
 }
 
-/*
-double CastorSimParameters::simHitToPhotoelectrons(const DetId & detId) const 
+
+double CastorSimParameters::getNominalfCperPE() const 
 {
-  // the gain is in units of GeV/fC.  We want a constant with pe/dGeV
-  // pe/dGeV = (GeV/dGeV) / (GeV/fC) / (fC/pe) 
-  double result = CaloSimParameters::simHitToPhotoelectrons(detId);
-  if(HcalGenericDetId(detId).genericSubdet() != HcalGenericDetId::HcalGenForward
-     || HcalGenericDetId(detId).genericSubdet() != HcalGenericDetId::HcalGenCastor)
-    { 
-      result = samplingFactor(detId) / fCtoGeV(detId) / photoelectronsToAnalog();
-    }
-  return result;
+  // return the nominal PMT gain value of CASTOR from the config file.
+  
+  return nominalfCperPE;
 }
-*/
+
 
 double CastorSimParameters::photoelectronsToAnalog(const DetId & detId) const
 {

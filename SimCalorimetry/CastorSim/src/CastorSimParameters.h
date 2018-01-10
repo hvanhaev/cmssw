@@ -25,7 +25,7 @@ virtual ~CastorSimParameters() {}
 
 void setDbService(const CastorDbService * service) {theDbService = service;}
 
-//virtual double simHitToPhotoelectrons(const DetId & detId) const;
+virtual double getNominalfCperPE() const;
 
 virtual double photoelectronsToAnalog(const DetId & detId) const;
 
@@ -39,6 +39,7 @@ double fCtoGeV(const DetId & detId) const;
 private:
 const CastorDbService * theDbService;
 double theSamplingFactor;
+double nominalfCperPE;
 //std::vector<double> theSamplingFactors;
 };
 
