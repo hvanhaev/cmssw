@@ -11,6 +11,8 @@
 CastorPedestalsAnalysis::CastorPedestalsAnalysis(const edm::ParameterSet& ps) :
    castorDigiCollectionTag(ps.getParameter<edm::InputTag>("castorDigiCollectionTag"))
 {
+   tok_input_ = consumes<edm::SortedCollection<CastorDataFrame,edm::StrictWeakOrdering<CastorDataFrame> > >(ps.getParameter<edm::InputTag>("castorDigiCollectionTag"));
+   
    hiSaveFlag = ps.getUntrackedParameter<bool>("hiSaveFlag", false);
    dumpXML = ps.getUntrackedParameter<bool>("dumpXML", false);
    verboseflag = ps.getUntrackedParameter<bool>("verbose", false);
@@ -234,7 +236,8 @@ CastorPedestalsAnalysis::analyze(const edm::Event& e, const edm::EventSetup& iSe
    using namespace std;
 
    edm::Handle<CastorDigiCollection> castor;
-   e.getByLabel(castorDigiCollectionTag, castor);
+   //e.getByLabel(castorDigiCollectionTag, castor);
+   e.getByToken(tok_input_,castor);
 
    edm::ESHandle<CastorDbService> conditions;
    iSetup.get<CastorDbRecord>().get(conditions);
