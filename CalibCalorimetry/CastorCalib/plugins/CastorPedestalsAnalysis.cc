@@ -8,8 +8,7 @@
 #include <memory>
 #include "CalibCalorimetry/CastorCalib/interface/CastorPedestalsAnalysis.h"
 
-CastorPedestalsAnalysis::CastorPedestalsAnalysis(const edm::ParameterSet& ps) :
-   castorDigiCollectionTag(ps.getParameter<edm::InputTag>("castorDigiCollectionTag"))
+CastorPedestalsAnalysis::CastorPedestalsAnalysis(const edm::ParameterSet& ps)
 {
    tok_input_ = consumes<edm::SortedCollection<CastorDataFrame,edm::StrictWeakOrdering<CastorDataFrame> > >(ps.getParameter<edm::InputTag>("castorDigiCollectionTag"));
    
@@ -178,13 +177,6 @@ CastorPedestalsAnalysis::~CastorPedestalsAnalysis()
         dephist->GetXaxis()->SetTitle("module");
         dephist->GetYaxis()->SetTitle("sector");
     
-    //for (int n=0; n!= 4; n++) 
-    //{
-         //dephist[n]->Write();
-         //dephist[n]->SetDrawOption("colz");
-         //dephist[n]->GetXaxis()->SetTitle("i#eta");
-         //dephist[n]->GetYaxis()->SetTitle("i#phi");
-    //}
 
     std::stringstream tempstringout;
     tempstringout << runnum;
@@ -197,32 +189,7 @@ CastorPedestalsAnalysis::~CastorPedestalsAnalysis()
     theStyle->SetCanvasDefW(1600); //Width of canvas
 
     gStyle = theStyle;
-/*
-    TCanvas * c1 = new TCanvas("c1","graph",1);
-    c1->Divide(2,2);
-    c1->cd(1);
-    CASTORMeans->Draw();
-    c1->SaveAs(name1.c_str());   
 
-    theStyle->SetOptStat("n");
-    gStyle = theStyle;
-
-    TCanvas * c2 = new TCanvas("c2","graph",1);
- //   c2->Divide(2,2);
-    c2->cd(1);
-    dephist->Draw();
-    dephist->SetDrawOption("colz");
-    //c2->cd(2);
-    //dephist[1]->Draw();
-    //dephist[1]->SetDrawOption("colz");
-    //c2->cd(3);
-    //dephist[2]->Draw();
-    //dephist[2]->SetDrawOption("colz");
-    //c2->cd(4);
-    //dephist[3]->Draw();
-    //dephist[3]->SetDrawOption("colz");
-    c2->SaveAs(name2.c_str());
-*/
     std::cout << "Writing ROOT file... ";
     theFile->Close();
     std::cout << "ROOT file closed.\n";
@@ -236,7 +203,6 @@ CastorPedestalsAnalysis::analyze(const edm::Event& e, const edm::EventSetup& iSe
    using namespace std;
 
    edm::Handle<CastorDigiCollection> castor;
-   //e.getByLabel(castorDigiCollectionTag, castor);
    e.getByToken(tok_input_,castor);
 
    edm::ESHandle<CastorDbService> conditions;
@@ -269,10 +235,6 @@ CastorPedestalsAnalysis::analyze(const edm::Event& e, const edm::EventSetup& iSe
       CASTORWidths = new TH1F("All Ped Widths CASTOR","All Ped Widths CASTOR", 100, 0, 3);
 
       dephist = new TH2F("Pedestals (ADC)","All Castor",14, 0., 14.5, 16, .5, 16.5);
-     // dephist[0] = new TH2F("Pedestals (ADC)","Depth 1",89, -44, 44, 72, .5, 72.5);
-     // dephist[1] = new TH2F("Pedestals (ADC)","Depth 2",89, -44, 44, 72, .5, 72.5);
-     // dephist[2] = new TH2F("Pedestals (ADC)","Depth 3",89, -44, 44, 72, .5, 72.5);
-     // dephist[3] = new TH2F("Pedestals (ADC)","Depth 4",89, -44, 44, 72, .5, 72.5);
 
       edm::ESHandle<CastorElectronicsMap> refEMap;
       iSetup.get<CastorElectronicsMapRcd>().get(refEMap);

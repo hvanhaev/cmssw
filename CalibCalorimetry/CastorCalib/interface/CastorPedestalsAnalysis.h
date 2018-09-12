@@ -109,7 +109,6 @@ class CastorPedestalsAnalysis : public edm::EDAnalyzer
    bool firsttime;
 
    edm::EDGetTokenT<edm::SortedCollection<CastorDataFrame,edm::StrictWeakOrdering<CastorDataFrame> > > tok_input_;
-   edm::InputTag castorDigiCollectionTag;
 };
 #endif
 
